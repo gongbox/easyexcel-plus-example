@@ -17,13 +17,13 @@
         <swagger.version>2.9.2</swagger.version>
         <lombok.version>1.18.20</lombok.version>
 
-        <easyexcel-plus.version>1.0.0</easyexcel-plus.version>
+        <easyexcel-plus.version>1.0.7</easyexcel-plus.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.github.gongbox</groupId>
-            <artifactId>easyexcel-plus-spring-boot-starter</artifactId>
+            <artifactId>easyexcel-plus-boot-starter</artifactId>
             <version>${easyexcel-plus.version}</version>
         </dependency>
         <dependency>
@@ -57,4 +57,32 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <finalName>easyexcel-plus-demo</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.gongbo.excel.example.ServerApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
