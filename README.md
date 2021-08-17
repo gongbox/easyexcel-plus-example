@@ -75,11 +75,38 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
       }
   }
   ```
+- 配置类:
+    ```java
+    @Configuration
+    public class EasyExcelPlusConfig {
+    
+        @Bean
+        public ResultHandler resultBuilder() {
+            return new ResultHandler() {
+                @Override
+                public boolean check(Object result) {
+                    return result instanceof Result;
+                }
+    
+                @Override
+                public Object success(Object data) {
+                    return Result.success(data);
+                }
+    
+                @Override
+                public Object getData(Object result) {
+                    return ((Result<?>) result).getData();
+                }
+    
+            };
+        }
+    }
+    ```
 - 配置文件:
   ```yaml
   spring:
     application:
-      name: export_test
+      name: export_demo
 
   easyexcel-plus:
     export:
@@ -113,7 +140,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
     }
     ```
   >演示地址：http://8.129.7.25/export/test-fileName-convert?export=excel
-  
+
   或者
     ```java
     @GetMapping(value = "test-fileName-business")
@@ -146,7 +173,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
         return Result.success(ExportDemoView.data());
     }
     ```
-   >演示地址：http://8.129.7.25/export/test-sheetName-business?export=excel
+  >演示地址：http://8.129.7.25/export/test-sheetName-business?export=excel
 - **导出到固定文件夹**
     ```java
     @GetMapping(value = "test-out-path")
@@ -213,7 +240,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
   ```
   同一接口可以添加多个注解，以实现支持多种导出，通过注解tag属性设置标签，导出时，需要增使用参数export_tag指定标签。
   > 演示地址，导出XLS ：http://8.129.7.25/export/test-tag?export=excel&export_tag=xls
-  
+
   > 演示地址，导出XLSX：http://8.129.7.25/export/test-tag?export=excel&export_tag=xlsx
 - **导出-简单模版导出**
     ```java
@@ -287,7 +314,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
         }
     }
     ```
-   >演示地址：http://8.129.7.25/export/test-template-much-sheet?export=excel
+  >演示地址：http://8.129.7.25/export/test-template-much-sheet?export=excel
 - **导出-模版导出（公式）**
     ```java
     @GetMapping(value = "test-template-formula")
@@ -352,7 +379,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
    ```
   ![img_1.png](img_1.png)
   >演示地址： 导入-模版下载：http://8.129.7.25/import/test-import?import=template
-    
+
   >演示地址： 导入-数组参数：http://8.129.7.25/import/test-import?import=excel
 # 期望 | Futures
 
