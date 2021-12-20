@@ -17,7 +17,7 @@
         <swagger.version>2.9.2</swagger.version>
         <lombok.version>1.18.20</lombok.version>
 
-        <easyexcel-plus.version>1.0.10</easyexcel-plus.version>
+        <easyexcel-plus.version>1.1.0</easyexcel-plus.version>
     </properties>
 
     <dependencies>
