@@ -104,7 +104,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 
   easyexcel-plus:
     export:
-      template-dir: classpath:exportTemplates
+      template-dir: classpath:exportTemplates/
   ```
 ### 使用
 
