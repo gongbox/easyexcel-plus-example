@@ -7,7 +7,7 @@ server:
 
 easyexcel-plus:
   export:
-    template-dir: classpath:exportTemplates/
+    template-dir: classpath:exportTemplates
 
 
 
