@@ -20,16 +20,16 @@ public Result<List<ExportDemoView>> testNormal() {
 返回数据如下：
 > 演示地址：http://8.129.7.25/export/test-normal
 
-若要实现导出excel，只需要在接口上增加注解@ExcelExport即可，如下所示：
+若要实现导出excel，只需要在接口上增加注解@Export即可，如下所示：
 ```java
 @GetMapping(value = "test-normal")
-@ExcelExport
+@Export
 public Result<List<ExportDemoView>> testNormal() {
     return Result.success(ExportDemoView.data());
 }
 ```
-添加该注解后，接口依然正常查询，导出时只需要添加请求参数export=excel即可，如下所示：
-> 演示地址：http://8.129.7.25/export/test-normal?export=excel
+添加该注解后，接口便同时支持查询、导出，不影响原有的查询。若要导出，则只需要添加请求参数export=excel即可，此时导出数据与查询结果一致，如下所示：
+> 演示地址（请复制地址到浏览器地址栏，按回车健访问）：http://8.129.7.25/export/test-normal?export=excel
 
 ## 更多示例
 EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名、文件格式，模版导出，导出数据转换等等。
@@ -102,16 +102,35 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
     application:
       name: export_demo
 
+  server:
+    port: 80
+  
   easyexcel-plus:
     export:
-      template-dir: classpath:exportTemplates/
+      #默认导出Sheet名称
+      default-sheet-name: Sheet1
+      #模板文件路径
+      template-dir: classpath:templates
+      #默认导出文件格式
+      default-excel-type: xlsx
+      #默认导出方式
+      default-export-by: easy_excel
+    import:
+      #默认导入读取的Sheet名称
+      default-sheet-name: Sheet1
+      #模板文件路径
+      template-dir: classpath:templates
+      #默认导入方式
+      default-import-by: easy_excel
+      #读取excel超时时间，不设置或设置为0时无读取时间限制
+      read-timeout: 60000
   ```
 ### 使用
 
 - **导出-设置导出文件名称**
     ```java
     @GetMapping(value = "test-fileName")
-    @ExcelExport(fileName = "文件名称")
+    @Export(fileName = "文件名称")
     public Result<List<ExportDemoView>> testFilename() {
         return Result.success(ExportDemoView.data());
     }
@@ -120,7 +139,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-动态设置文件名称**
     ```java
     @GetMapping(value = "test-fileName-convert")
-    @ExcelExport(fileNameConvert = CustomFileNameConvert.class)
+    @Export(fileNameConvert = CustomFileNameConvert.class)
     public Result<List<ExportDemoView>> testFileNameConvert() {
         return Result.success(ExportDemoView.data());
     }
@@ -137,7 +156,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
   或者
     ```java
     @GetMapping(value = "test-fileName-business")
-    @ExcelExport
+    @Export
     public Result<List<ExportDemoView>> testFileNameBusiness() {
         if (ExportContextHolder.isExportExcel()) {
             ExportContextHolder.getContext().setFileName("动态文件名称");
@@ -149,7 +168,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-固定Sheet名称**
     ```java
     @GetMapping(value = "test-sheetName")
-    @ExcelExport(sheetName = "Sheet0")
+    @Export(sheetName = "Sheet0")
     public Result<List<ExportDemoView>> testSheetName() {
         return Result.success(ExportDemoView.data());
     }
@@ -158,7 +177,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-动态设置Sheet名称**
     ```java
     @GetMapping(value = "test-sheetName-business")
-    @ExcelExport
+    @Export
     public Result<List<ExportDemoView>> testSheetNameBusiness() {
         if (ExportContextHolder.isExportExcel()) {
             ExportContextHolder.getContext().setSheetName("业务中修改Sheet名称");
@@ -170,7 +189,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出到固定文件夹**
     ```java
     @GetMapping(value = "test-out-path")
-    @ExcelExport(outputPath = "D:\\WorkDir\\temp\\file")
+    @Export(outputPath = "D:\\WorkDir\\temp\\file")
     public Result<List<ExportDemoView>> testOutPath() {
         return Result.success(ExportDemoView.data());
     }
@@ -179,7 +198,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-字段过滤**
     ```java
     @GetMapping(value = "test-filter")
-    @ExcelExport(fieldFilter = CustomFieldFilter.class)
+    @Export(fieldFilter = CustomFieldFilter.class)
     public Result<List<ExportDemoView>> testFilter() {
         return Result.success(ExportDemoView.data());
     }
@@ -195,7 +214,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-设置导出文件格式**
     ```java
     @GetMapping(value = "test-excelType")
-    @ExcelExport(excelType = ExcelType.XLS)
+    @Export(excelType = ExcelType.XLS)
     public Result<List<ExportDemoView>> testExcelType() {
         return Result.success(ExportDemoView.data());
     }
@@ -204,7 +223,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-数据转换**
     ```java
     @GetMapping(value = "test-dataConvert")
-    @ExcelExport(dataConvert = CustomExportDataConvert.class)
+    @Export(dataConvert = CustomExportDataConvert.class)
     public Result<List<ExportDemoView>> testDataConvert() {
         return Result.success(ExportDemoView.data());
     }
@@ -225,8 +244,8 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-同一接口多种导出方式**
     ```java
     @GetMapping(value = "test-tag")
-    @ExcelExport(tag = "xls", excelType = ExcelType.XLS)
-    @ExcelExport(tag = "xlsx", excelType = ExcelType.XLSX)
+    @Export(tag = "xls", excelType = ExcelType.XLS)
+    @Export(tag = "xlsx", excelType = ExcelType.XLSX)
     public Result<List<ExportDemoView>> testTag() {
         return Result.success(ExportDemoView.data());
     }
@@ -241,7 +260,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
      * 导出-简单模版导出
      */
     @GetMapping(value = "test-template-simple")
-    @ExcelExport(template = "template-simply.xlsx")
+    @Export(template = "template-simply.xlsx")
     public Result<List<ExportDemoView>> testTemplateSimple() {
         return Result.success(ExportDemoView.data());
     }
@@ -250,7 +269,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-模版导出（单个Sheet）**
     ```java
     @GetMapping(value = "test-template-single-sheet")
-    @ExcelExport(template = "template-single-sheet.xlsx", dataConvert = TemplateSingleSheetDataConvert.class)
+    @Export(template = "template-single-sheet.xlsx", dataConvert = TemplateSingleSheetDataConvert.class)
     public Result<List<ExportDemoView>> testTemplateSingleSheet() {
         return Result.success(ExportDemoView.data());
     }
@@ -279,7 +298,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-模版导出（多个Sheet）**
     ```java
     @GetMapping(value = "test-template-much-sheet")
-    @ExcelExport(template = "template-much-sheet.xlsx", dataConvert = TemplateMuchSheetDataConvert.class)
+    @Export(template = "template-much-sheet.xlsx", dataConvert = TemplateMuchSheetDataConvert.class)
     public Result<List<ExportDemoView>> testTemplateMuchSheet() {
         return Result.success(ExportDemoView.data());
     }
@@ -311,7 +330,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导出-模版导出（公式）**
     ```java
     @GetMapping(value = "test-template-formula")
-    @ExcelExport(template = "template-formula.xls", dataConvert = TemplateFormulaDataConvert.class)
+    @Export(template = "template-formula.xls", dataConvert = TemplateFormulaDataConvert.class)
     public Result<List<ExportDemoView>> testTemplateFormula() {
         return Result.success(ExportDemoView.data());
     }
@@ -345,16 +364,25 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导入-模板下载**
     ```java
     @GetMapping(value = "test-template")
-    @ExcelImport(modelClass = ExportDemoView.class)
+    @Import(modelClass = ExportDemoView.class)
     public void testTemplate() {
     }
    ```
   >演示地址：
   > 导入-模版下载：http://8.129.7.25/import/test-template?import=template
+- **导入-自定义模版下载**
+    ```java
+    @GetMapping(value = "test-custom-template")
+    @Import(modelClass = ExportDemoView.class, template = "template-import.xlsx", templateFilename = "自定义模板")
+    public void testCustomTemplate() {
+    }
+   ```
+  >演示地址：
+  > 导入-自定义模版下载：http://8.129.7.25/import/test-custom-template?import=template
 - **导入-导入**
     ```java
     @PostMapping(value = "test-import")
-    @ExcelImport
+    @Import
     public Result<ExportDemoView[]> testImport(@RequestBody(required = false) ExportDemoView[] param) {
         return Result.success(param);
     }
@@ -365,7 +393,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
 - **导入-模板下载、数据导入**
     ```java
     @RequestMapping(value = "test-import-template", method = {RequestMethod.GET, RequestMethod.POST})
-    @ExcelImport
+    @Import
     public Result<ExportDemoView[]> testImportTemplate(@RequestBody(required = false) ExportDemoView[] param) {
         return Result.success(param);
     }
@@ -374,6 +402,7 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
   >演示地址： 导入-模版下载：http://8.129.7.25/import/test-import?import=template
 
   >演示地址： 导入-数组参数：http://8.129.7.25/import/test-import?import=excel
+
 # 期望 | Futures
 
 > 欢迎提出更好的意见，帮助完善 EasyExcelPlus
