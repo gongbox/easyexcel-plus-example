@@ -68,6 +68,9 @@ EasyExcelPlus支持多种多样的自定义配置，比如设置导出文件名�
       @ColumnWidth(20)
       private Date date = new Date();
   
+      @ExcelProperty(value = "性别", converter = DefaultEnumConvert.class)
+      private GenderEnum gender = GenderEnum.valueOf(RandomUtil.randomInt(3));
+      
       public static List<ExportDemoView> data() {
           return Stream.generate(ExportDemoView::new)
                   .limit(RandomUtil.randomInt(1, 20))
